@@ -28,7 +28,7 @@ class StudentController extends Controller
         //dd($students);  //testing 
         
         //load the view and pass the student info
-    return view('students.index')->with('students', $students);    
+    return view('dashboard', compact('students'))->with('students', $students);    
     }
 
     /**
@@ -62,17 +62,27 @@ class StudentController extends Controller
     //     'fname.required'=>'Must give a First Name',
     //     'lname.required'=>'Must give a Last Name'
     // ];
+    $customMessages = [
+    'fname.required' => 'The first name field is required.',
+    'lname.required' => 'The last name field is required.',
+    'email.required' => 'The E-mail field is required.',
+    'email.email' => 'Please enter a valid E-mail address.',
+    'email.unique' => 'The E-mail address is already taken.',
+    'telnum.required' => 'The telephone number field is required.',
+    'telnum.min' => 'The telephone number must be at least 10 characters.',
+    'rollno.required' => 'The roll number field is required.',
+    'rollno.integer' => 'The roll number must be an integer.',
+    'rollno.max' => 'The roll number must be less than or equal to 999.',
+];
 
-        $request->validate([
+        $validatedData = $request->validate([
         'fname' => 'required|string|max:255',
-        'fname.required'=>'Must give a First Name',
         'lname' => 'required|string|max:255',
-        'lname.required'=>'Must give a Last Name',
-        'email' => 'bail|required|email|unique:students',
+        'email' => 'required|bail|email|unique:students',
         'telnum' => 'required|string|min:10',
         'rollno' => 'required|integer|max:999',
         
-    ]);
+    ], $customMessages);
 
 
         $data = $request->session()->all();
